@@ -5,24 +5,26 @@ import { feathersClient } from './feathersClient';
 import { campaignNames } from './test/campaignNames.js';
 import { veggieDescriptions } from './test/veggieDescriptions.js';
 import { youtubeVideos } from './test/youtubeVideos.js';
+import NewCampaign from './components/NewCampaign'
+import CampaignVideoList from './components/CampaignVideoList'
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = { campaigns: [] };
-    // this how you setup a client connection to server
-    const campaigns = feathersClient.service('campaigns');
-    campaigns.find().then( response => {
-      const campaigns = response.data;
-      this.setState({campaigns});
-    });
-    // this is how code listens to server changes via websocket
-    campaigns.on('created', campaign => {
-      this.setState({ campaigns: this.state.campaigns.concat([campaign])})
-      // just to show it works log list campaign objects after adding one
-      console.log(this.state.campaigns)
-    });
+    // // this how you setup a client connection to server
+    // const campaigns = feathersClient.service('campaigns');
+    // campaigns.find().then( response => {
+    //   const campaigns = response.data;
+    //   this.setState({campaigns});
+    // });
+    // // this is how code listens to server changes via websocket
+    // campaigns.on('created', campaign => {
+    //   this.setState({ campaigns: this.state.campaigns.concat([campaign])})
+    //   // just to show it works log list campaign objects after adding one
+    //   console.log(this.state.campaigns)
+    // });
   }
 
   // this creates a new fake campaign object on server
@@ -43,7 +45,7 @@ class App extends Component {
   // this uses the feathers remove method with null parameters, which means delete all
   deleteAll() {
     feathersClient.service('campaigns').remove().then(() => {
-      this.setState({ campaigns: [] })
+      // this.setState({ campaigns: [] })
     });
   }
 
@@ -60,14 +62,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
+        {/* <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
         <p className="App-intro">
           Look at App.js to see how to connect to server to read, write, and delete.
-        </p>
-        <div>
+        </p> */}
+        <CampaignVideoList />
+        {/* <div>
           There are {this.state.campaigns.length} campaigns so far :)
         </div>
         <div>
@@ -80,7 +83,7 @@ class App extends Component {
               return <li>{listValue.name}</li>;
             })}
           </ul>
-        </div>
+        </div> */}
       </div>
     );
   }
