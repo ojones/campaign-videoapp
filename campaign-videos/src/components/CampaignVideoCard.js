@@ -13,7 +13,6 @@ class CampaignVideoCard extends Component {
                 modestbranding: 1,
                 rel: 0,
                 playsinline: 0,
-                wmode: 'opaque'
             }
         }
 

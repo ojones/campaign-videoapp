@@ -7,6 +7,7 @@ import { veggieDescriptions } from './test/veggieDescriptions.js';
 import { youtubeVideos } from './test/youtubeVideos.js';
 import NewCampaign from './components/NewCampaign'
 import CampaignVideoList from './components/CampaignVideoList'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 class App extends Component {
 
@@ -61,30 +62,16 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        {/* <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <Router>
+        <div className="App">
+          <div>
+            <Switch>
+              <Route exact path="/" component={CampaignVideoList} />
+              <Route exact path="/add-campaign" component={NewCampaign} />
+            </Switch>
+          </div>
         </div>
-        <p className="App-intro">
-          Look at App.js to see how to connect to server to read, write, and delete.
-        </p> */}
-        <CampaignVideoList />
-        {/* <div>
-          There are {this.state.campaigns.length} campaigns so far :)
-        </div>
-        <div>
-          <button onClick={this.handleAddCampaign.bind(this)}>Add campaign</button>
-          <button onClick={this.handleDeleteAll.bind(this)}>Delete all</button>
-        </div>
-        <div>
-          <ul>
-            {this.state.campaigns.map(function(listValue){
-              return <li>{listValue.name}</li>;
-            })}
-          </ul>
-        </div> */}
-      </div>
+      </Router>
     );
   }
 }
