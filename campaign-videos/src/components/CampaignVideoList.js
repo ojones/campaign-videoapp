@@ -42,13 +42,12 @@ class CampaignVideoList extends Component {
                 }
                 
                 <Link to='/add-campaign'>
-                    <button type="button" className="btn btn-circle btn-success">
-                        <div className="center-block">
-                            <svg className="svgIcon" width="48px" height="48px" viewBox="0 0 48 48">
-                                <path d="M38 26H26v12h-4V26H10v-4h12V10h4v12h12v4z" fill="white" />
-                            </svg>
-                        </div>
-                    </button>
+                    <div className="btn btn-circle center-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="80" viewBox="0 0 24 24" width="80">
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                    </div>
                 </Link>
             </div>
         )

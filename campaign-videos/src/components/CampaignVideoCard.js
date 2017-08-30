@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import YouTube from 'react-youtube'
+import { Link } from 'react-router-dom'
 
 class CampaignVideoCard extends Component {
     render() {
@@ -20,8 +21,8 @@ class CampaignVideoCard extends Component {
             <div className="card" style={this.props.style}>
                 <YouTube
                     className='card-img-top'
-                    videoId='HkZDSqyE1do'       // defaults -> nullThere are 2 campaigns so far :)
-                    opts={opts}                        // defaults -> {}
+                    videoId='HkZDSqyE1do'
+                    opts={opts}
                     onReady={this._onReady}
                 />
 
@@ -33,7 +34,17 @@ class CampaignVideoCard extends Component {
                             Watch
                         </a> */}
                     </div>
-                    <a href="#" className="btn btn-primary">Add Video</a>
+                    <div className="form-group">
+                        <Link to="#">
+                            <div className="svg-icon svg-baseline">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                </svg>
+                            </div>
+                            Add video
+                        </Link>
+                    </div>
                 </div>
             </div>
         )

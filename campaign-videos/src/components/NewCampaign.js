@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import GoBackButton from '../GoBackButton'
-// import { Form, Input } from 'formsy-react-components'
+import { Link } from 'react-router-dom'
+import YouTube from 'react-youtube'
 
 class NewCampaign extends Component {
 
@@ -11,73 +11,100 @@ class NewCampaign extends Component {
             name: '',
             title: '',
             description: '',
-            src: null,
-            blob: null,
-            showPlayer: false
+            blobs: [],
+            videos: [],
         };
-
-        this.uploadVideo = this.uploadVideo.bind(this)
     }
 
     recordVideo(e) {
         e.preventDefault()
-        
+
         var self = this;
         window.clipchamp({
             title: 'Create new campaign video',
-            logo: 'https://www.materialui.co/materialIcons/editor/publish_48px.svg',
-            color: '#3a6467',
             output: 'blob',
             enable: [
-                'no-thank-you',                 // close widget after upload and skip final 'Thank you' screen
-                'no-user-retry',                // directly upload video after finishing recording
-                'mobile-webcam-format-fallback' // use inline recorder in Chrome on Android
+                'no-thank-you',
+                'no-user-retry', 
+                // 'mobile-webcam-format-fallback'
             ],
-            onVideoCreated: function (outputVideoBlob) {
-                console.log(outputVideoBlob)
-                console.log(window.URL.createObjectURL(outputVideoBlob))
-                self.setState({ showPlayer: true });
-                self.setState({ blob: outputVideoBlob });
-                self.setState({ src: window.URL.createObjectURL(outputVideoBlob) });
+            onVideoCreated: function (blob) {
+                self.setState(prevState => {
+                    const blobs = prevState.blobs.slice(0)
+                    blobs.push(blob)
+                    console.log(blobs)
+                    return {blobs}
+                });
+            },
+            onErrorOccurred: function(err) {
+                console.log(err)
             }
-        }
-        ).open();
+        }).open();
     }
 
-    uploadVideo(model) {
-        var self = this;
+    uploadVideo(e) {
+        e.preventDefault()
 
-        if (!this.state.blob)
+        var self = this;
+        const { name, description } = this.state
+
+        if (!this.state.blobs)
             return;
 
         window.clipchamp({
-            logo: 'https://www.materialui.co/materialIcons/editor/publish_48px.svg',
             title: 'Uploading, please wait...',
-            color: '#3a6467',
             inputs: ['direct'],
-            direct: { files: [this.state.blob] },
+            direct: { files: this.state.blobs },
             output: 'youtube',
             enable: [
-                'no-user-retry',    // directly upload video after finishing recording
-                'no-thank-you',     // close widget after upload and skip final 'Thank you' screen
+                'batch',
+                'no-user-retry',
+                'no-thank-you',
             ],
             youtube: {
-                title: model.title,
-                description: model.title
+                title: name,
+                description: description
             },
 
             onUploadComplete: function (video) {
                 console.log(video)
-                self.props.history.goBack();
+                // self.props.history.goBack();
+            },
+            onErrorOccurred: function(err) {
+                console.log(err)
             }
-        }
-        ).open();
+        }).open();
     }
 
-    updateTitleValue(value) {
-        this.setState({
-            title: value
-        });
+    uploadVideoToYoutube(e){
+        e.preventDefault()
+        
+        var self = this;
+        const { name, description } = this.state
+
+        window.clipchamp({
+            title: 'Uploading, please wait...',
+            output: 'youtube',
+            enable: [
+                'no-user-retry',
+                'no-thank-you',
+            ],
+            youtube: {
+                title: name,
+                description: description
+            },
+
+            onUploadComplete: function (video) {
+                self.setState(prevState => {
+                    const videos = prevState.videos.slice(0)
+                    videos.push(video)
+                    return {videos}
+                });
+            },
+            onErrorOccurred: function(err) {
+                console.log(err)
+            }
+        }).open();
     }
 
     onChange() {
@@ -85,30 +112,49 @@ class NewCampaign extends Component {
     }
 
     render() {
-
-        const history = this.props.history;
-
-        let { name, description } = this.state
+        const { name, description } = this.state
+        const opts = {
+            width:'100%',
+            playerVars: {
+                autoplay: 1,
+                mute: 1,
+                controls: 0,
+                showinfo: 0,
+                modestbranding: 1,
+                rel: 0,
+                playsinline: 0,
+            }
+        }
 
         return (
             <div className="container-fluid page-layout">
                 <div className="row justify-content-md-center">
                     <div className="col-md-auto">
+                        <div className="form-group">
+                            <Link to="/">
+                                <div className="svg-icon svg-baseline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">
+                                        <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+                                        <path d="M0-.5h24v24H0z" fill="none"/>
+                                    </svg>
+                                </div>
+                                Back to my home view
+                            </Link>
+                        </div>
+                        <br />
 
-                        {/* <GoBackButton history={history} /> */}
+                        <h2>Create new campaign</h2> <br />
 
-                        <h1>Create new campaign</h1>
-
-                        <form onSubmit={this.uploadVideo} onChange={this.onChange.bind(this)}>
+                        <form onSubmit={this.uploadVideo.bind(this)} onChange={this.onChange.bind(this)}>
                             <div className="form-group">
-                                <label htmlFor="name"> Campaign name: </label>
+                                <label htmlFor="name"> Campaign name:</label> &nbsp;
                                 <input
+                                    className="border border-secondary border-left-0 border-right-0 border-top-0"
+                                    style={{backgroundColor:'#F9F9F9'}}
                                     name="name"
-                                    id="name-input"
                                     ref="name"
                                     type="text"
                                     value={name}
-                                    placeholder="E.g. Climate change."
                                     required
                                 />
                             </div>
@@ -117,37 +163,46 @@ class NewCampaign extends Component {
                                 <label htmlFor="description"> Campaign description: </label>
                                 <br />
                                 <textarea
+                                    style={{width:'100%', resize:'none'}}
+                                    rows="7"
                                     name="description"
-                                    id="description-input"
                                     ref="description"
                                     type="text"
                                     value={description}
-                                    placeholder="Describe your campaing video..."
                                     required
                                 />
                             </div>
 
-                            <label> Videos: </label>
-                            {this.state.showPlayer ? <video id="video-player" src={this.state.src} controls></video> : null}
+                            <label> Videos: </label> <br />
+                            {/* {
+                                this.state.blobs.map(blob => {
+                                    return <video key={blob.name} src={window.URL.createObjectURL(blob)} controls></video>
+                                })
+                            } */}
+                            {
+                                this.state.videos.map(video => {
+                                    return <YouTube
+                                            videoId={video.videoId}
+                                            opts={opts}
+                                            onReady={this._onReady}
+                                    />
+                                })
+                            }
                             
                             <div className="form-group">
-                                <button type="button " className="btn btn-secondary" onClick={this.recordVideo.bind(this)}>
+                                <Link to="#" onClick={this.uploadVideoToYoutube.bind(this)}>
                                     <div className="svg-icon svg-baseline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">
+                                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                            <path d="M0 0h24v24H0z" fill="none"/>
                                         </svg>
                                     </div>
                                     Add video
-                                </button>
+                                </Link>
                             </div>
                             
-                            <div className="form-group">
+                            <div className="form-group text-center">
                                 <button className="btn btn-secondary" type="submit">
-                                    <div className="svg-icon svg-baseline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-                                            <path d="M3 2v2h12V2H3zm0 9h3v5h6v-5h3L9 5l-6 6z" />
-                                        </svg>
-                                    </div>
                                     Save
                                 </button>
                             </div>
