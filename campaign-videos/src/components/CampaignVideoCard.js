@@ -16,19 +16,20 @@ class CampaignVideoCard extends Component {
                 playsinline: 0,
             }
         }
+        const { name, description, videos, style } = this.props
 
         return (
-            <div className="card" style={this.props.style}>
+            <div className="card" style={style}>
                 <YouTube
                     className='card-img-top'
-                    videoId='HkZDSqyE1do'
+                    videoId={!!videos ? videos[0] : null}
                     opts={opts}
                     onReady={this._onReady}
                 />
 
                 <div className="card-body">
-                    <h4 className="card-title">{ this.props.name }</h4>
-                    <p className="card-text" dangerouslySetInnerHTML={{ __html: this.props.description }}></p>
+                    <h4 className="card-title">{ name }</h4>
+                    <p className="card-text" dangerouslySetInnerHTML={{ __html: description }}></p>
                     <div>
                         {/* <a className="btn btn-success" href={youtubeURLBase + this.props.videoId}>
                             Watch

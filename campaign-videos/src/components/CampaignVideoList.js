@@ -35,13 +35,13 @@ class CampaignVideoList extends Component {
         return (
             <div className="card-columns">
                 {
-                    this.state.campaigns.map(campaign => {
+                    campaigns.map(campaign => {
                         const { name, description, id, videos } = campaign
                         return <CampaignVideoCard key={id} name={name} description={description} videos={videos} style={{margin: '20px'}}/>
                     })
                 }
                 
-                <Link to='/add-campaign'>
+                <Link to='/add'>
                     <div className="btn btn-circle center-block">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="80" viewBox="0 0 24 24" width="80">
                             <path d="M0 0h24v24H0z" fill="none"/>

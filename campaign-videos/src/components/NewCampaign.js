@@ -2,24 +2,25 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import YouTube from 'react-youtube'
+import { feathersClient } from '../feathersClient'
 
 class NewCampaign extends Component {
 
     constructor() {
-        super();
+        super()
         this.state = {
             name: '',
             title: '',
             description: '',
             blobs: [],
             videos: [],
-        };
+        }
     }
 
     recordVideo(e) {
         e.preventDefault()
 
-        var self = this;
+        var self = this
         window.clipchamp({
             title: 'Create new campaign video',
             output: 'blob',
@@ -34,22 +35,22 @@ class NewCampaign extends Component {
                     blobs.push(blob)
                     console.log(blobs)
                     return {blobs}
-                });
+                })
             },
             onErrorOccurred: function(err) {
                 console.log(err)
             }
-        }).open();
+        }).open()
     }
 
     uploadVideo(e) {
         e.preventDefault()
 
-        var self = this;
+        // var self = this
         const { name, description } = this.state
 
         if (!this.state.blobs)
-            return;
+            return
 
         window.clipchamp({
             title: 'Uploading, please wait...',
@@ -68,18 +69,18 @@ class NewCampaign extends Component {
 
             onUploadComplete: function (video) {
                 console.log(video)
-                // self.props.history.goBack();
+                // self.props.history.goBack()
             },
             onErrorOccurred: function(err) {
                 console.log(err)
             }
-        }).open();
+        }).open()
     }
 
     uploadVideoToYoutube(e){
         e.preventDefault()
         
-        var self = this;
+        var self = this
         const { name, description } = this.state
 
         window.clipchamp({
@@ -95,16 +96,24 @@ class NewCampaign extends Component {
             },
 
             onUploadComplete: function (video) {
+                console.log(video)
                 self.setState(prevState => {
                     const videos = prevState.videos.slice(0)
-                    videos.push(video)
+                    videos.push(video.id)
                     return {videos}
-                });
+                })
             },
             onErrorOccurred: function(err) {
                 console.log(err)
             }
-        }).open();
+        }).open()
+    }
+
+    saveCampaign() {
+        const { name, description, videos } = this.state
+        // const videos = this.state.videos.map(video => video.id)
+
+        feathersClient.service('campaigns').create({name, description, videos})
     }
 
     onChange() {
@@ -112,7 +121,7 @@ class NewCampaign extends Component {
     }
 
     render() {
-        const { name, description } = this.state
+        const { name, description, videos } = this.state
         const opts = {
             width:'100%',
             playerVars: {
@@ -145,7 +154,7 @@ class NewCampaign extends Component {
 
                         <h2>Create new campaign</h2> <br />
 
-                        <form onSubmit={this.uploadVideo.bind(this)} onChange={this.onChange.bind(this)}>
+                        <form onSubmit={this.saveCampaign.bind(this)} onChange={this.onChange.bind(this)}>
                             <div className="form-group">
                                 <label htmlFor="name"> Campaign name:</label> &nbsp;
                                 <input
@@ -180,11 +189,12 @@ class NewCampaign extends Component {
                                 })
                             } */}
                             {
-                                this.state.videos.map(video => {
+                                videos.map(video => {
+                                    console.log(video)
                                     return <YouTube
-                                            videoId={video.videoId}
-                                            opts={opts}
-                                            onReady={this._onReady}
+                                        key={video}
+                                        videoId={video}
+                                        opts={opts}
                                     />
                                 })
                             }
@@ -218,4 +228,4 @@ export default NewCampaign
 
 NewCampaign.propTypes = {
     history: PropTypes.object.isRequired,
-};
+}
