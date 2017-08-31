@@ -1,37 +1,11 @@
 import React, { Component } from 'react'
 import CampaignVideoCard from './CampaignVideoCard'
 import { Link } from 'react-router-dom'
-import { feathersClient } from '../feathersClient'
 
 class CampaignVideoList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = { campaigns: [] }
-        
-        const campaigns = feathersClient.service('campaigns')
-
-        campaigns.find().then(response => {
-            const campaigns = response.data
-            this.setState({ campaigns })
-        })
-        
-        campaigns.on('created', campaign => {
-            this.setState((prevState) => {
-                let campaigns = prevState.campaigns.slice[0]
-                campaigns.push(campaign)
-                return { campaigns }
-            })
-        })
-    }
-
-    componentWillUnmount() {
-        const campaigns = feathersClient.service('campaigns')
-
-        campaigns.on('created', null)
-    }
-
     render() {
-        const { campaigns } = this.state
+        const { campaigns } = this.props
+
         return (
             <div className="card-columns">
                 {
