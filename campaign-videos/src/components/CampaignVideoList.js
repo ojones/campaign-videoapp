@@ -11,7 +11,7 @@ class CampaignVideoList extends Component {
                 {
                     campaigns.map(campaign => {
                         const { name, description, _id, videos } = campaign
-                        return <CampaignVideoCard key={_id} name={name} description={description} videos={videos} style={{margin: '20px'}}/>
+                        return <CampaignVideoCard key={_id} id={_id} name={name} description={description} videos={videos} style={{margin: '20px'}}/>
                     })
                 }
                 

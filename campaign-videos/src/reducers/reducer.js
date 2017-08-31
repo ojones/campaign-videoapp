@@ -16,7 +16,7 @@
             
 //             campaigns.on('created', campaign => {
 //                 this.setState((prevState) => {
-//                     let campaigns = prevState.campaigns.slice[0]
+//                     let campaigns = prevState.campaigns.slice(0)
 //                     campaigns.push(campaign)
 //                     return { campaigns }
 //                 })

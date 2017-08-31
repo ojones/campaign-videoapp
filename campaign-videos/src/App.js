@@ -22,8 +22,19 @@ class App extends Component {
     
     campaigns.on('created', campaign => {
         this.setState((prevState) => {
-            let campaigns = prevState.campaigns.slice[0]
+            let campaigns = prevState.campaigns.slice(0)
             campaigns.push(campaign)
+            return { campaigns }
+        })
+    })
+
+    campaigns.on('updated', campaign => {
+        this.setState((prevState) => {
+            const campaigns = prevState.campaigns.slice(0)
+            let index = campaigns.findIndex((_campaign) => _campaign._id == campaign._id)
+            console.log(campaigns)
+            campaigns.splice(index, 1, campaign)
+            console.log(campaigns)
             return { campaigns }
         })
     })
