@@ -24,17 +24,11 @@ class CampaignVideoCard extends Component {
                     className='card-img-top'
                     videoId={!!videos ? videos[0] : null}
                     opts={opts}
-                    onReady={this._onReady}
                 />
 
                 <div className="card-body">
                     <h4 className="card-title">{ name }</h4>
                     <p className="card-text" dangerouslySetInnerHTML={{ __html: description }}></p>
-                    <div>
-                        {/* <a className="btn btn-success" href={youtubeURLBase + this.props.videoId}>
-                            Watch
-                        </a> */}
-                    </div>
                     <div className="form-group">
                         <Link to="#">
                             <div className="svg-icon svg-baseline">
@@ -49,10 +43,6 @@ class CampaignVideoCard extends Component {
                 </div>
             </div>
         )
-    }
-
-    _onReady(event) {
-        // access to player in all event handlers via event.target
     }
 }
 

@@ -84,7 +84,7 @@ class NewCampaign extends Component {
         const { name, description } = this.state
 
         window.clipchamp({
-            title: 'Uploading, please wait...',
+            title: 'Upload video from file or webcam to Youtube',
             output: 'youtube',
             enable: [
                 'no-user-retry',
@@ -111,9 +111,9 @@ class NewCampaign extends Component {
 
     saveCampaign() {
         const { name, description, videos } = this.state
-        // const videos = this.state.videos.map(video => video.id)
 
         feathersClient.service('campaigns').create({name, description, videos})
+        this.props.history.push('/')
     }
 
     onChange() {
@@ -138,7 +138,7 @@ class NewCampaign extends Component {
         return (
             <div className="container-fluid page-layout">
                 <div className="row justify-content-md-center">
-                    <div className="col-md-auto">
+                    <div className="col-auto col-md-4">
                         <div className="form-group">
                             <Link to="/">
                                 <div className="svg-icon svg-baseline">
